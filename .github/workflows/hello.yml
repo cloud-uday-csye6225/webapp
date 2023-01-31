@@ -1,0 +1,13 @@
+---
+name : First Github Workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: first step
+      run: echo "Hello World!"
