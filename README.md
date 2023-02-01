@@ -3,14 +3,14 @@ This Project is built using Spring boot, Java, MySQL.
 
 ## Requirements
 For building and running the application you need:
-JDK 19
-maven 3.8.6
-mysql 8.0.32
+ - JDK 19
+ - maven 3.8.6
+ - mysql 8.0.32
 
 ## How to Run
 
-Clone this repository
-You can build the project and run the tests by running mvn clean package
+Clone the repository it using ssh.
+You can build the project and run the tests by running mvn clean package.
 Once successfully built, you can run the project in any IDE.
 
 ## Github Actions
@@ -58,3 +58,7 @@ curl --location --request PUT 'http://localhost:8080/v1/user/4' \
 curl --location --request GET 'http://localhost:8080/healthz' \
 --header 'Cookie: JSESSIONID=60495B2988F7210B7555D0445DC94525'
 ```
+
+### Personal Details
+ - Name : Uday Kiran Kolluru
+ - NUID : 002738927
