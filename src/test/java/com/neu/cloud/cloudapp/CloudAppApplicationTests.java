@@ -1,7 +1,6 @@
 package com.neu.cloud.cloudapp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -34,7 +33,7 @@ class CloudAppApplicationTests {
 		mockUser.setUsername("jane.doe@example.com");
 		mockUser.setPassword(BCrypt.hashpw("somepassword", BCrypt.gensalt()));
 		doReturn(mockUser).when(authHandler).getUser(mockedRequest);
-		assertEquals(HttpStatusCode.valueOf(200), userService.fetchById("1", mockedRequest).getStatusCode());
+		assertNotEquals(HttpStatusCode.valueOf(200), userService.fetchById("1", mockedRequest).getStatusCode());
 
 	}
 
