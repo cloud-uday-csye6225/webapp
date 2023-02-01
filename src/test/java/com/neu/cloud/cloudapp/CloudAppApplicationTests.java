@@ -20,10 +20,9 @@ import com.neu.cloud.cloudapp.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @WebAppConfiguration
 @ContextConfiguration
-@AutoConfigureTestDatabase
 class CloudAppApplicationTests {
 
 	@Autowired
