@@ -5,11 +5,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.neu.cloud.cloudapp.Utils.AuthHandler;
 import com.neu.cloud.cloudapp.model.User;
@@ -18,6 +21,8 @@ import com.neu.cloud.cloudapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@RunWith(SpringJUnit4ClassRunner.class)
 class CloudAppApplicationTests {
 
 	@Autowired
