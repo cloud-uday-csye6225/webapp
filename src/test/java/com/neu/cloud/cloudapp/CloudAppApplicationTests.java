@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,9 +21,10 @@ import com.neu.cloud.cloudapp.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
+@AutoConfigureTestDatabase
 class CloudAppApplicationTests {
 
 	@Autowired
