@@ -38,7 +38,7 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> getUserById(@PathVariable String userId,
 			HttpServletRequest httpServletRequest) {
 		try {
-			return userService.findById(userId, httpServletRequest);
+			return userService.fetchById(userId, httpServletRequest);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			Map<String, Object> resMap = new HashMap<>();

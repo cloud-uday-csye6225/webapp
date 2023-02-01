@@ -10,7 +10,7 @@ import com.neu.cloud.cloudapp.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-	Optional<User> findByUsername(String username);
+	User findByUsername(String username);
 
 	Optional<User> findByUsernameAndPassword(String string, String string2);
 
