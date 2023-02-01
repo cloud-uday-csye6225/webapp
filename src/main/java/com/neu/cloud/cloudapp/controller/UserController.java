@@ -60,7 +60,7 @@ public class UserController {
 	}
 
 	@GetMapping("/healthz")
-	public ResponseEntity<Object> checkHealth(@RequestBody Map<String, String> requMap) {
+	public ResponseEntity<Object> checkHealth() {
 		return new ResponseEntity<>(HttpStatusCode.valueOf(200));
 	}
 
