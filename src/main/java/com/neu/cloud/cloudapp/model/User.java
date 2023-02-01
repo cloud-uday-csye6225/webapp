@@ -47,6 +47,10 @@ public class User {
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -93,6 +97,13 @@ public class User {
 
 	public void setAccountUpdated(Date accountUpdated) {
 		this.accountUpdated = accountUpdated;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+				+ ", password=" + password + ", accountCreated=" + accountCreated + ", accountUpdated=" + accountUpdated
+				+ "]";
 	}
 
 }

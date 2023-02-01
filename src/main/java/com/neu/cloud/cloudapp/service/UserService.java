@@ -47,12 +47,12 @@ public class UserService {
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
-		Optional<User> userExists = userRepository.findByUsername(username);
-		if (userExists.isPresent()) {
-			resMap.clear();
-			resMap.put("msg", "Email already exists");
-			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
-		}
+//		Optional<User> userExists = userRepository.findByUsername(username);
+//		if (userExists.isPresent()) {
+//			resMap.clear();
+//			resMap.put("msg", "Email already exists");
+//			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+//		}
 
 		User user = new User();
 		user.setFirstName(firstName);
@@ -74,7 +74,7 @@ public class UserService {
 		return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(201));
 	}
 
-	public ResponseEntity<Map<String, Object>> findById(String userId, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Map<String, Object>> fetchById(String userId, HttpServletRequest httpServletRequest) {
 		Map<String, Object> resMap = new HashMap<>();
 		if (Utils.isValidString(userId) == false) {
 			resMap.clear();
@@ -103,19 +103,18 @@ public class UserService {
 		}
 
 		resMap.clear();
-		addDataToResponse(resMap, authUser.getUsername());
-		return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(200));
-	}
-
-	private void addDataToResponse(Map<String, Object> resMap, String username) {
-		Optional<User> userExists = userRepository.findByUsername(username);
-		User user = userExists.get();
+		User user = authUser;
 		resMap.put("id", user.getId());
 		resMap.put("first_name", user.getFirstName());
 		resMap.put("last_name", user.getLastName());
 		resMap.put("username", user.getUsername());
 		resMap.put("account_created", user.getAccountCreated());
 		resMap.put("account_updated", user.getAccountUpdated());
+		return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(200));
+	}
+
+	private void addDataToResponse(Map<String, Object> resMap, String username) {
+
 	}
 
 	public ResponseEntity<Map<String, Object>> updateUserById(String userId, Map<String, String> requMap,
@@ -167,19 +166,7 @@ public class UserService {
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
-//		Optional<User> userExists = userRepository.findById(Integer.parseInt(userId));
-//		if (!userExists.isPresent()) {
-//			resMap.clear();
-//			resMap.put("msg", "No User exists with given id");
-//			return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(400));
-//		}
 		User user = authUser;
-
-//		if (user.getId() != authUser.getId()) {
-//			resMap.clear();
-//			resMap.put("msg", "Forbidden to update the data");
-//			return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(403));
-//		}
 
 		String firstName = requMap.getOrDefault("first_name", null);
 		String lastName = requMap.getOrDefault("last_name", null);

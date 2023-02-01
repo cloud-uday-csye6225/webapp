@@ -29,12 +29,20 @@ public class AuthHandler {
 				String credentials = new String(credDecoded, StandardCharsets.UTF_8);
 				// credentials = username:password
 				final String[] values = credentials.split(":", 2);
-				Optional<User> userOptional = userRepository.findByUsername(values[0]);
-				if (userOptional.isPresent()) {
-					if (verifyHash(values[1], userOptional.get().getPassword())) {
-						return userOptional.get();
+
+				User user = userRepository.findByUsername(values[0]);
+				if (user != null) {
+					if (verifyHash(values[1], user.getPassword())) {
+						return user;
 					}
 				}
+
+//				Optional<User> userOptional = userRepository.findByUsername(values[0]);
+//				if (userOptional.isPresent()) {
+//					if (verifyHash(values[1], userOptional.get().getPassword())) {
+//						return userOptional.get();
+//					}
+//				}
 			}
 			return null;
 
