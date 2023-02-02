@@ -47,12 +47,12 @@ public class UserService {
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
-//		Optional<User> userExists = userRepository.findByUsername(username);
-//		if (userExists.isPresent()) {
-//			resMap.clear();
-//			resMap.put("msg", "Email already exists");
-//			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
-//		}
+		User userExists = userRepository.findByUsername(username);
+		if (userExists != null) {
+			resMap.clear();
+			resMap.put("msg", "Email already exists");
+			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+		}
 
 		User user = new User();
 		user.setFirstName(firstName);
