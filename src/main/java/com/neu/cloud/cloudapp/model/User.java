@@ -38,10 +38,10 @@ public class User {
 	private String password;
 
 	@Column(name = "account_created")
-	private Date accountCreated;
+	private String accountCreated;
 
 	@Column(name = "account_updated")
-	private Date accountUpdated;
+	private String accountUpdated;
 
 	public int getId() {
 		return id;
@@ -83,19 +83,19 @@ public class User {
 		this.password = password;
 	}
 
-	public Date getAccountCreated() {
+	public String getAccountCreated() {
 		return accountCreated;
 	}
 
-	public void setAccountCreated(Date accountCreated) {
+	public void setAccountCreated(String accountCreated) {
 		this.accountCreated = accountCreated;
 	}
 
-	public Date getAccountUpdated() {
+	public String getAccountUpdated() {
 		return accountUpdated;
 	}
 
-	public void setAccountUpdated(Date accountUpdated) {
+	public void setAccountUpdated(String accountUpdated) {
 		this.accountUpdated = accountUpdated;
 	}
 
@@ -105,5 +105,7 @@ public class User {
 				+ ", password=" + password + ", accountCreated=" + accountCreated + ", accountUpdated=" + accountUpdated
 				+ "]";
 	}
+
+	
 
 }

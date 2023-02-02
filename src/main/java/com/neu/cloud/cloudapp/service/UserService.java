@@ -1,5 +1,6 @@
 package com.neu.cloud.cloudapp.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,8 +60,8 @@ public class UserService {
 		user.setLastName(lastName);
 		user.setUsername(username);
 		user.setPassword(authHandler.hash(password));
-		user.setAccountCreated(new Date());
-		user.setAccountUpdated(new Date());
+		user.setAccountCreated(LocalDateTime.now().toString());
+		user.setAccountUpdated(LocalDateTime.now().toString());
 		userRepository.save(user);
 
 		resMap.clear();
@@ -184,7 +185,7 @@ public class UserService {
 			user.setPassword(authHandler.hash(password));
 		}
 
-		user.setAccountUpdated(new Date());
+		user.setAccountUpdated(LocalDateTime.now().toString());
 		userRepository.save(user);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 	}
