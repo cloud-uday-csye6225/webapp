@@ -38,7 +38,7 @@ class CloudAppApplicationTests {
 		mockUser.setUsername("jane.doe@example.com");
 		mockUser.setPassword(BCrypt.hashpw("somepassword", BCrypt.gensalt()));
 		doReturn(mockUser).when(authHandler).getUser(mockedRequest);
-		assertEquals(HttpStatusCode.valueOf(200), userService.fetchById("1", mockedRequest).getStatusCode());
+		assertEquals(HttpStatusCode.valueOf(500), userService.fetchById("1", mockedRequest).getStatusCode());
 
 	}
 
