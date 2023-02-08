@@ -88,10 +88,23 @@ public class Utils {
 
 	public static boolean isValidString(String str) {
 		try {
-			return ((str != null) && (!str.trim().equals("")));
+			return ((str != null) && (!str.equals("")));
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public static boolean isValidNumber(String str) {
+		try {
+			if ((str != null) && (!str.equals(""))) {
+				int p = Integer.parseInt(str);
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 }
