@@ -88,7 +88,7 @@ public class Utils {
 
 	public static boolean isValidString(String str) {
 		try {
-			return ((str != null) && (!str.equals("")));
+			return ((str != null) && (!str.trim().equals("")));
 		} catch (Exception e) {
 			return false;
 		}
@@ -97,7 +97,7 @@ public class Utils {
 	public static boolean isValidNumber(String str) {
 		try {
 			if (isValidString(str)) {
-				int p = Integer.parseInt(str);
+				int p = Integer.parseInt(str.trim());
 				return true;
 			} else {
 				return false;
