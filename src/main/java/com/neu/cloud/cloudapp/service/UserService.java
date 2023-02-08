@@ -114,10 +114,6 @@ public class UserService {
 		return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(200));
 	}
 
-	private void addDataToResponse(Map<String, Object> resMap, String username) {
-
-	}
-
 	public ResponseEntity<Map<String, Object>> updateUserById(String userId, Map<String, String> requMap,
 			HttpServletRequest httpServletRequest) {
 		Map<String, Object> resMap = new HashMap<>();
@@ -128,12 +124,9 @@ public class UserService {
 		int c = 0;
 
 		for (String str : requMap.keySet()) {
-			if (set.contains(str) == false) {
-				resMap.clear();
-				resMap.put("msg", "Only limited fields are alllowed to update");
-				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+			if (set.contains(str)) {
+				c++;
 			}
-			c++;
 		}
 		if (c == 0) {
 			resMap.clear();

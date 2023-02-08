@@ -1,7 +1,5 @@
 package com.neu.cloud.cloudapp.model;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,6 +40,14 @@ public class User {
 
 	@Column(name = "account_updated")
 	private String accountUpdated;
+
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "owner_user_id", referencedColumnName = "id")
+//	private List<Product> products = new ArrayList<>();
+
+//	@OneToMany
+//	@JoinColumn(name = "id") // we need to duplicate the physical information
+//	private List<Product> products;
 
 	public int getId() {
 		return id;
@@ -105,7 +111,5 @@ public class User {
 				+ ", password=" + password + ", accountCreated=" + accountCreated + ", accountUpdated=" + accountUpdated
 				+ "]";
 	}
-
-	
 
 }
