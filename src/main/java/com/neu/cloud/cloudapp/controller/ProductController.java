@@ -26,7 +26,7 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping("/v1/product")
-	public ResponseEntity<Map<String, Object>> createProduct(@RequestBody(required = false) Map<String, String> requMap,
+	public ResponseEntity<Map<String, Object>> createProduct(@RequestBody(required = false) Map<String, Object> requMap,
 			HttpServletRequest httpServletRequest) {
 		try {
 			return productService.create(requMap, httpServletRequest);
@@ -65,7 +65,7 @@ public class ProductController {
 
 	@PutMapping("/v1/product/{productId}")
 	public ResponseEntity<Map<String, Object>> updateProductById(@PathVariable String productId,
-			@RequestBody Map<String, String> requMap, HttpServletRequest httpServletRequest) {
+			@RequestBody Map<String, Object> requMap, HttpServletRequest httpServletRequest) {
 		try {
 			return productService.updateProductById(productId, requMap, httpServletRequest);
 		} catch (Exception e) {
@@ -76,9 +76,9 @@ public class ProductController {
 
 	@PatchMapping("/v1/product/{productId}")
 	public ResponseEntity<Map<String, Object>> updateOrPatchProductById(@PathVariable String productId,
-			@RequestBody Map<String, String> requMap, HttpServletRequest httpServletRequest) {
+			@RequestBody Map<String, Object> requMap, HttpServletRequest httpServletRequest) {
 		try {
-			return productService.updateProductById(productId, requMap, httpServletRequest);
+			return productService.patchOperationUpdateProductById(productId, requMap, httpServletRequest);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
