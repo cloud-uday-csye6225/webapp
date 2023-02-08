@@ -122,7 +122,7 @@ public class ProductService {
 		}
 
 		productRepository.delete(produOptional.get());
-		return new ResponseEntity<>(convertToProductDto(produOptional.get()), HttpStatusCode.valueOf(403));
+		return new ResponseEntity<>(convertToProductDto(produOptional.get()), HttpStatusCode.valueOf(204));
 	}
 
 	public ResponseEntity<Map<String, Object>> updateProductById(String productId, Map<String, String> requMap,
@@ -170,17 +170,28 @@ public class ProductService {
 			product.setManufacturer(manufacturer);
 			product.setDateLastUpdated(LocalDateTime.now().toString());
 		}
+		System.out.println("out qty");
 
 		if (requMap.containsKey("quantity")) {
-			if (Utils.isValidNumber("quantity") == false) {
-				int qty = Integer.parseInt("quantity");
-				if (qty < 0 || qty > 100) {
+			System.out.println("in qty");
+			String quantity = requMap.getOrDefault("quantity", null);
+			if (Utils.isValidNumber(quantity)) {
+				System.out.println("in qty check number");
+				int qty = Integer.parseInt(quantity);
+				if (qty >= 0 && qty <= 100) {
+					System.out.println("in qty check number range");
+					product.setQuantity(qty);
+					product.setDateLastUpdated(LocalDateTime.now().toString());
+				} else {
+					System.out.println("out qty check number range");
 					return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 				}
-				product.setQuantity(qty);
-				product.setDateLastUpdated(LocalDateTime.now().toString());
+			} else {
+				System.out.println("out qty check number");
+				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
 		}
+		productRepository.save(product);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 	}
 

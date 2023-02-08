@@ -69,6 +69,7 @@ public class ProductController {
 		try {
 			return productService.updateProductById(productId, requMap, httpServletRequest);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 	}
