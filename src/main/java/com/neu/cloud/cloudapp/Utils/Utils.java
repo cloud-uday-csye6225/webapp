@@ -96,11 +96,12 @@ public class Utils {
 
 	public static boolean isValidNumber(String str) {
 		try {
-			if ((str != null) && (!str.equals(""))) {
+			if (isValidString(str)) {
 				int p = Integer.parseInt(str);
 				return true;
+			} else {
+				return false;
 			}
-			return false;
 		} catch (Exception e) {
 			return false;
 		}
