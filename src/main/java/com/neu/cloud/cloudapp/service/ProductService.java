@@ -220,6 +220,15 @@ public class ProductService {
 		String manufacturer = (String) requMap.getOrDefault("manufacturer", null);
 		int qty = (int) requMap.getOrDefault("quantity", null);
 
+		if (Utils.isValidString(name) == false || Utils.isValidString(description) == false
+				|| Utils.isValidString(sku) == false || Utils.isValidString(manufacturer) == false) {
+			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+		}
+
+		if (qty < 0 || qty > 100) {
+			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+		}
+
 		if (Utils.isValidString(sku)) {
 			product.setSku(sku.trim());
 			product.setDateLastUpdated(LocalDateTime.now().toString());
@@ -241,12 +250,8 @@ public class ProductService {
 		}
 
 		if (qty >= 0 && qty <= 100) {
-			System.out.println("in qty check number range");
 			product.setQuantity(qty);
 			product.setDateLastUpdated(LocalDateTime.now().toString());
-		} else {
-			System.out.println("out qty check number range");
-			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		productRepository.save(product);
