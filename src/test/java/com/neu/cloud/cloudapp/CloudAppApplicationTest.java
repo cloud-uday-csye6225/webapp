@@ -22,17 +22,14 @@ import com.neu.cloud.cloudapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 @WebAppConfiguration
 @ContextConfiguration
 public class CloudAppApplicationTest {
 
-	@Autowired
-	private UserService userService;
-
 	@Test
 	void contextLoads() {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		UserService userService = new UserService();
 		AuthHandler authHandler = mock(AuthHandler.class);
 		User mockUser = new User();
 		mockUser.setFirstName("Jane");
@@ -41,7 +38,5 @@ public class CloudAppApplicationTest {
 		mockUser.setPassword(BCrypt.hashpw("somepassword", BCrypt.gensalt()));
 		doReturn(mockUser).when(authHandler).getUser(mockedRequest);
 		assertEquals(HttpStatusCode.valueOf(400), userService.fetchById(null, mockedRequest).getStatusCode());
-
 	}
-
 }
