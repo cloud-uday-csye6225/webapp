@@ -1,6 +1,6 @@
 package com.neu.cloud.cloudapp;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @SpringBootTest
 @WebAppConfiguration
 @ContextConfiguration
-class CloudAppApplicationTests {
+public class CloudAppApplicationTests {
 
 	@Autowired
 	private UserService userService;
@@ -37,7 +37,7 @@ class CloudAppApplicationTests {
 		mockUser.setUsername("jane.doe@example.com");
 		mockUser.setPassword(BCrypt.hashpw("somepassword", BCrypt.gensalt()));
 		doReturn(mockUser).when(authHandler).getUser(mockedRequest);
-		assertNotEquals(HttpStatusCode.valueOf(200), userService.fetchById("1", mockedRequest).getStatusCode());
+		assertEquals(HttpStatusCode.valueOf(400), userService.fetchById(null, mockedRequest).getStatusCode());
 
 	}
 
