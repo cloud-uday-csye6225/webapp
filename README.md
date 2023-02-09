@@ -70,6 +70,56 @@ curl --location --request GET 'http://localhost:8080/healthz' \
 --header 'Cookie: JSESSIONID=60495B2988F7210B7555D0445DC94525'
 ```
 
+### Create Product
+```
+curl --location --request POST 'http://localhost:8080/v1/product' \
+--header 'Authorization: Basic YUBnbWFpbC5jb206YQ==' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "fvc ",
+  "description": "fsvd",
+  "sku": " dsfv",
+  "manufacturer": "dfsv ",
+  "quantity": 21
+}'
+```
+
+### Get Product
+```
+curl --location --request GET 'http://localhost:8080/v1/product/1'
+```
+
+### Put Product
+```
+curl --location --request PUT 'http://localhost:8080/v1/product/1' \
+--header 'Authorization: Basic YkBnbWFpbC5jb206YQ==' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "",
+  "description": "null",
+  "manufacturer": "davs ",
+    "quantity": 15,
+  "sku" : "null"
+}'
+```
+
+### Patch Product
+```
+curl --location --request PATCH 'http://localhost:8080/v1/product/1' \
+--header 'Authorization: Basic YUBnbWFpbC5jb206YQ==' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+   "name": "dafshjk adsf",
+    "sku" : null
+}'
+```
+
+### Delete Product
+```
+curl --location --request DELETE 'http://localhost:8080/v1/product/1' \
+--header 'Authorization: Basic YUBnbWFpbC5jb206YQ=='
+```
+
 ### Personal Details
  - Name : Uday Kiran Kolluru
  - NUID : 002738927
