@@ -1,9 +1,9 @@
-name : First Github Workflow
+name: First Github Workflow
 
 env:
   ARTIFACT_NAME: csye6225-webapp-${{ github.sha}}.zip
   CODEDEPLOY_APPLICATION_NAME: csye6225-webapp
-  CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME:  csye6225-webapp-deployment
+  CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME: csye6225-webapp-deployment
   AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
   AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
   AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
@@ -14,14 +14,14 @@ env:
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   hello-world:
     runs-on: ubuntu-latest
-    steps: 
-    - name: first step
-      run: echo This is the first step of my first job.
+    steps:
+      - name: first step
+        run: echo This is the first step of my first job.
 
   run_tests:
     runs-on: ubuntu-latest
@@ -39,17 +39,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
-        run:  mvn -Dtest=CloudAppApplicationTest test
-    packer-artifact:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+        run: mvn -Dtest=CloudAppApplicationTest test
       - name: Validate Template
         run: |
           mvn clean package
           mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
           cp stage/*.jar packer
-          cd packer 
+          cd packer
   packer-build:
     runs-on: ubuntu-latest
     steps:
@@ -62,18 +58,3 @@ jobs:
           pwd
           cd packer
           packer build -var aws_access_key=$AWS_DEV_ACCESS_KEY -var aws_secret_key=$AWS_DEV_SECRET_KEY -var subnet_id=$AWS_DEV_SUBNET_ID -var aws_region=$AWS_REGION -var source_ami=$AWS_SOURCE_AMI -var ssh_username=$AWS_SSH_USERNAME ami.pkr.hcl
-          
-
-  # packer:
-  #   name: ami-template-validation
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - name: Validate Template
-  #       run: |
-  #         cd ..
-  #         zip -r webapp.zip webapp
-  #         cp webapp.zip webapp/packer/webapp.zip
-  #         cd webapp/packer
-        
