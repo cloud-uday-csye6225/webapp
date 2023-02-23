@@ -46,7 +46,7 @@ jobs:
           sudo apt-get update && sudo apt-get install packer
           pwd
           cd packer
-          packer build -var aws_access_key=$AWS_DEV_ACCESS_KEY -var aws_secret_key=$AWS_DEV_SECRET_KEY -var subnet_id=$AWS_DEV_SUBNET_ID -var aws_region=$AWS_REGION -var ssh_username=$AWS_SSH_USERNAME ami.pkr.hcl
+          packer build -var aws_access_key=$AWS_DEV_ACCESS_KEY -var aws_secret_key=$AWS_DEV_SECRET_KEY -var subnet_id=$AWS_DEV_SUBNET_ID -var aws_region=$AWS_REGION ami.pkr.hcl
           env:
             AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
             AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
@@ -54,4 +54,3 @@ jobs:
             AWS_REGION: ${{ secrets.AWS_REGION }}
             SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
             AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
-            AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME}}
