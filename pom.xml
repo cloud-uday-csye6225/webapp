@@ -13,7 +13,7 @@
 	<name>cloud-app</name>
 	<description>Project for Cloud Computing</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>19</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
