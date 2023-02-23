@@ -1,0 +1,49 @@
+name: AMI Creation
+
+env:
+  ARTIFACT_NAME: csye6225-webapp-${{ github.sha}}.zip
+  CODEDEPLOY_APPLICATION_NAME: csye6225-webapp
+  CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME: csye6225-webapp-deployment
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 19
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Validate Template
+        run: |
+          mvn clean package
+          mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
+          cp stage/*.jar packer
+          cd packer
+      - name: Build AMI
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer
+          pwd
+          cd packer
+          packer init .
+          packer validate .
+          packer build -var aws_access_key=$AWS_DEV_ACCESS_KEY -var aws_secret_key=$AWS_DEV_SECRET_KEY -var subnet_id=$AWS_DEV_SUBNET_ID -var aws_region=$AWS_REGION ami.pkr.hcl
+        env:
+          AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
+          AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
+          AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
+          AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
