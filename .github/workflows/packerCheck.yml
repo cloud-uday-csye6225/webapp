@@ -14,7 +14,7 @@ env:
   AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME}}
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
 
 jobs:
