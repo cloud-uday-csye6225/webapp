@@ -1,16 +1,16 @@
 variable "aws_access_key" {
   type    = string
-  default = ""
+  default = env("AWS_DEV_ACCESS_KEY")
 }
 
 variable "aws_region" {
   type    = string
-  default = ""
+  default = env("AWS_REGION")
 }
 
 variable "aws_secret_key" {
   type    = string
-  default = ""
+  default = env("AWS_DEV_SECRET_KEY")
 }
 
 variable "demo_account_id" {
@@ -30,7 +30,7 @@ variable "ssh_username" {
 
 variable "subnet_id" {
   type    = string
-  default = ""
+  default = env("AWS_DEV_SUBNET_ID")
 }
 
 # "timestamp" template function replacement
