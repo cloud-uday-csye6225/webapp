@@ -39,7 +39,7 @@ jobs:
           mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
           cp stage/*.jar packer
           cd packer
-      - name: Build AMI
+      - name: Validate Packer
         run: |
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
