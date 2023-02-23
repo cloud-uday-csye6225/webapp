@@ -46,10 +46,6 @@ jobs:
           mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
           cp stage/*.jar packer
           cd packer
-  packer-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
       - name: Build AMI
         run: |
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
