@@ -25,7 +25,7 @@ jobs:
       - name: Validate Template
         run: |
           mvn clean package
-          mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT. jar stage
+          mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
           cp stage/*.jar packer
           cd packer 
   packer-build:
