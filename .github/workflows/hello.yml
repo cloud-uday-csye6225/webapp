@@ -41,7 +41,6 @@ jobs:
       - name: Run tests with Maven
         run:  mvn -Dtest=CloudAppApplicationTest test
     packer-artifact:
-    name: ami-template-validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -52,7 +51,6 @@ jobs:
           cp stage/*.jar packer
           cd packer 
   packer-build:
-    name: create-ami
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
