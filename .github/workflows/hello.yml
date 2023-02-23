@@ -28,3 +28,16 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
         run:  mvn -Dtest=CloudAppApplicationTest test
+  # packer:
+  #   name: ami-template-validation
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Validate Template
+  #       run: |
+  #         cd ..
+  #         zip -r webapp.zip webapp
+  #         cp webapp.zip webapp/packer/webapp.zip
+  #         cd webapp/packer
+        
