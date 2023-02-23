@@ -1,0 +1,8 @@
+{
+  "aws_access_key": "AKIA6LFLHRQBK2T4IX3P",
+  "aws_secret_key": "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",
+  "aws_region": "us-east-1",
+  "subnet_id": "subnet-05cf3e388b2e188bd",
+  "source_ami": "ami-0dfcb1ef8550277af",
+  "ssh_username": "ec2-user"
+}
