@@ -4,13 +4,6 @@ env:
   ARTIFACT_NAME: csye6225-webapp-${{ github.sha}}.zip
   CODEDEPLOY_APPLICATION_NAME: csye6225-webapp
   CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME: csye6225-webapp-deployment
-  AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
-  AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
-  AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
-  AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
-  AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME}}
 
 on:
   pull_request:
@@ -46,12 +39,6 @@ jobs:
           mkdir stage && cp target/cloud-app-0.0.1-SNAPSHOT.jar stage
           cp stage/*.jar packer
           cd packer
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
       - name: Build AMI
         run: |
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -60,3 +47,11 @@ jobs:
           pwd
           cd packer
           packer build -var aws_access_key=$AWS_DEV_ACCESS_KEY -var aws_secret_key=$AWS_DEV_SECRET_KEY -var subnet_id=$AWS_DEV_SUBNET_ID -var aws_region=$AWS_REGION -var ssh_username=$AWS_SSH_USERNAME ami.pkr.hcl
+          env:
+            AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
+            AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
+            AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
+            AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
+            AWS_SSH_USERNAME: ${{ secrets.AWS_SSH_USERNAME}}
