@@ -1,6 +1,5 @@
 name : Packer AMI Creation Workflow
 
-on:
 env:
   ARTIFACT_NAME: csye6225-webapp-${{ github.sha}}.zip
   CODEDEPLOY_APPLICATION_NAME: csye6225-webapp
