@@ -33,9 +33,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
         run: mvn -Dtest=CloudAppApplicationTest test
-  packer:
-    runs-on: ubuntu-latest
-    steps:
       - name: Clean MVN
         run: |
           mvn clean package
