@@ -1,5 +1,5 @@
 # Cloud Web Application
-This Project is built using Spring boot, Java, MySQL
+This Project is built using Spring boot, Java, MySQL.
 
 
 ## Requirements
