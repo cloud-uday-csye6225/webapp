@@ -68,7 +68,7 @@ public class ProductService {
 		product.setUser(authUser);
 
 		productRepository.save(product);
-		return new ResponseEntity<>(convertToProductDto(product), HttpStatusCode.valueOf(200));
+		return new ResponseEntity<>(convertToProductDto(product), HttpStatusCode.valueOf(201));
 	}
 
 	private Map<String, Object> convertToProductDto(Product product) {
