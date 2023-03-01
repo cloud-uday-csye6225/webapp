@@ -11,7 +11,7 @@ variable "aws_region" {
 variable "aws_secret_key" {
   type    = string
   default = env("AWS_DEV_SECRET_KEY")
-}
+
 
 variable "demo_account_id" {
   type    = list(string)
