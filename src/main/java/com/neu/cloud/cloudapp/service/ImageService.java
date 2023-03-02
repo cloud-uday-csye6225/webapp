@@ -44,11 +44,10 @@ public class ImageService {
 	@Autowired
 	private AuthHandler authHandler;
 
-	@Autowired
 	private AmazonS3 s3;
 
-//	@Value("${aws.s3.bucket}")
-	private static final String s3Bucket = "jhdsbxctest-1";
+	@Value("${aws.s3.bucket}")
+	private String s3Bucket;
 
 	public ResponseEntity<?> createImage(MultipartFile multipartFile, String productId,
 			HttpServletRequest httpServletRequest) {
