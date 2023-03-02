@@ -98,12 +98,8 @@ public class ImageService {
 			} catch (AmazonServiceException e) {
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
-			GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucket, filepath);
-			String url = s3.generatePresignedUrl(urlRequest).toString();
 
-			System.out.println(url);
-
-			String imageUrl = bucket + "/" + filepath;
+			String imageUrl = String.valueOf(s3.getUrl(bucket, filepath));
 			System.out.println(imageUrl);
 			Image image = new Image(product.getId(), filename, LocalDateTime.now().toString(), imageUrl);
 			imageRepository.save(image);
