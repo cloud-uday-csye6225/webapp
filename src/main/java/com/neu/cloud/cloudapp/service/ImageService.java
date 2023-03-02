@@ -47,7 +47,7 @@ public class ImageService {
 
 	private AmazonS3 s3;
 
-	@Value("${aws.s3.bucket:bucket}")
+	@Value("${aws.s3.bucket}")
 	private String s3Bucket;
 
 	public ResponseEntity<?> createImage(MultipartFile multipartFile, String productId,
