@@ -86,8 +86,8 @@ public class ImageService {
 			String filepath = UUID.randomUUID() + "/" + filename;
 			String bucket = s3Bucket;
 			System.out.println(bucket);
-			System.out.println("name " + filename);
-			System.out.println("name " + extension);
+			System.out.println("filename " + filename);
+			System.out.println("extension " + extension);
 
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(multipartFile.getSize());
@@ -112,7 +112,7 @@ public class ImageService {
 	}
 
 	private boolean isSupportedExtension(String extension) {
-		return extension != null && (extension.equals("png") || extension.equals("jpg") || extension.equals("jpeg"));
+		return extension != null && (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"));
 	}
 
 	public ResponseEntity<?> getAllImage(String productId, HttpServletRequest httpServletRequest) {
@@ -227,8 +227,10 @@ public class ImageService {
 		}
 		Image image = imageOptional.get();
 		String url = image.getS3BucketPath();
-		String bucket = url.split("/")[0];
-		String filepath = url.split("/")[1] + "/" + url.split("/")[2];
+		System.out.println(url);
+		String[] urlSplit = url.split("/");
+		String bucket = urlSplit[2].split("\\.")[0];
+		String filepath = urlSplit[3] + "/" + urlSplit[4];
 		s3.deleteObject(bucket, filepath);
 		imageRepository.delete(image);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
