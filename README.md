@@ -1,8 +1,6 @@
 # Cloud Web Application
 This Project is built using Spring boot, Java, MySQL.
 
-
-
 ## Requirements
 For building and running the application you need:
  - JDK 19
@@ -29,6 +27,7 @@ For building and running the application you need:
 ## Github Actions
 Added branch protection by preventing merge if any workflow fails.
 Added unit test cases to the workflow to make sure.
+AMI is bulit when pull request is merged.
 
 ## API Endpoints Curls
 
