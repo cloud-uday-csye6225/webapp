@@ -21,20 +21,12 @@ sudo systemctl enable tomcat
 # passwords=$(sudo grep 'temporary password' /var/log/mysqld.log | awk {'print $13'})
 # mysql -uroot -p$passwords --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root@1234ABCDEF';"
 # mysql -u root -proot@1234ABCDEF -e "create database cbdh;"
-sudo chmod 770 /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar
-sudo cp /tmp/webservice.service /etc/systemd/system
-sudo chmod 770 /etc/systemd/system/webservice.service
-sudo systemctl start webservice.service
-sudo systemctl enable webservice.service
-sudo systemctl restart webservice.service
-sudo systemctl status webservice.service
-echo '****** webservice *******'
-# sleep 3
-# sudo cp /tmp/webapp.zip ./webapp.zip
-# sudo unzip webapp.zip
-# ls
-# pwd
-# sudo kill -9 $(sudo lsof -t -i:8080)
-# cd webapp
-# mvn clean install
-# java -jar target/cloud-app-0.0.1-SNAPSHOT.jar
+# sudo chmod 770 /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar
+# sudo cp /tmp/webservice.service /etc/systemd/system
+# sudo chmod 770 /etc/systemd/system/webservice.service
+# sudo systemctl start webservice.service
+# sudo systemctl enable webservice.service
+# sudo systemctl restart webservice.service
+# sudo systemctl status webservice.service
+# echo '****** Copied webservice! *******'
+
