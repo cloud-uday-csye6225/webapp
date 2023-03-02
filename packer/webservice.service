@@ -4,7 +4,7 @@ ServiceAfter=syslog.target
 
 [Service]
 User=root
-ExecStart=/usr/bin/java -jar /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar
+ExecStart=/usr/bin/java -jar /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar --spring.config.name=/home/ec2-user/custom.properties
 SuccessExitStatus=143
 Restart=always
 RestartSec=5
