@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ImageService {
 
 	@Autowired
-	ImageRepository imageRepository;
+	private ImageRepository imageRepository;
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -46,7 +47,7 @@ public class ImageService {
 
 	private AmazonS3 s3;
 
-	@Value("${aws.s3.bucket}")
+	@Value("${aws.s3.bucket:bucket}")
 	private String s3Bucket;
 
 	public ResponseEntity<?> createImage(MultipartFile multipartFile, String productId,
