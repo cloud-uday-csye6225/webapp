@@ -1,6 +1,5 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
-src/main/java/com/neu/cloud/cloudapp/Utils/S3Config.java
 
 ### STS ###
 .apt_generated
