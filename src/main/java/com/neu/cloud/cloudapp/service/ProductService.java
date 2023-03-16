@@ -1,6 +1,7 @@
 package com.neu.cloud.cloudapp.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neu.cloud.cloudapp.Utils.AuthHandler;
 import com.neu.cloud.cloudapp.Utils.Utils;
+import com.neu.cloud.cloudapp.model.Image;
 import com.neu.cloud.cloudapp.model.Product;
 import com.neu.cloud.cloudapp.model.User;
+import com.neu.cloud.cloudapp.repository.ImageRepository;
 import com.neu.cloud.cloudapp.repository.ProductRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +30,12 @@ public class ProductService {
 
 	@Autowired
 	private AuthHandler authHandler;
+
+	@Autowired
+	private ImageRepository imageRepository;
+
+	@Autowired
+	private ImageService imageService;
 
 	public ResponseEntity<Map<String, Object>> create(Map<String, Object> requMap,
 			HttpServletRequest httpServletRequest) throws DataIntegrityViolationException {
@@ -121,6 +130,13 @@ public class ProductService {
 		}
 
 		productRepository.delete(produOptional.get());
+		try {
+			List<Image> images = imageRepository.findAllByProductId(Integer.parseInt(productId));
+			for (Image img : images) {
+				imageService.deleteImage(String.valueOf(img.getId()), productId, httpServletRequest);
+			}
+		} catch (Exception e) {
+		}
 		return new ResponseEntity<>(convertToProductDto(produOptional.get()), HttpStatusCode.valueOf(204));
 	}
 
