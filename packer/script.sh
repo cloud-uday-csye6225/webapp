@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo yum update
-sudo yum upgrade
+sudo yum update -y
+sudo yum upgrade -y
 sudo amazon-linux-extras install -y nginx1
 echo Start Java Installation
 sudo yum install java-17-amazon-corretto -y
@@ -21,11 +21,11 @@ sudo systemctl enable tomcat
 # mysql -uroot -p$passwords --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root@1234ABCDEF';"
 # mysql -u root -proot@1234ABCDEF -e "create database cbdh;"
 sudo chmod 770 /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar
+sudo yum install amazon-cloudwatch-agent
 sudo cp /tmp/webservice.service /etc/systemd/system
 sudo chmod 770 /etc/systemd/system/webservice.service
 sudo systemctl start webservice.service
 sudo systemctl enable webservice.service
 sudo systemctl restart webservice.service
 sudo systemctl status webservice.service
-# echo '****** Copied webservice! *******'
 

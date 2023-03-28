@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class UserService {
+
+	Logger logger = LoggerFactory.getLogger(UserService.class);
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -34,6 +39,7 @@ public class UserService {
 		if (requMap.containsKey("first_name") == false || requMap.containsKey("last_name") == false
 				|| requMap.containsKey("password") == false || requMap.containsKey("username") == false) {
 			resMap.put("msg", "Please enter all valid input fields");
+			logger.error("user creation failed as it does not have all required fields");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 		String firstName = requMap.get("first_name");
@@ -45,6 +51,7 @@ public class UserService {
 				|| Utils.isValidString(password) == false || Utils.isEmailValidated(username) == false) {
 			resMap.clear();
 			resMap.put("msg", "Please enter valid input");
+			logger.error("user creation failed as it does not have all valid values to fields");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -52,6 +59,7 @@ public class UserService {
 		if (userExists != null) {
 			resMap.clear();
 			resMap.put("msg", "Email already exists");
+			logger.error("user creation failed as email is not unique");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -63,7 +71,7 @@ public class UserService {
 		user.setAccountCreated(LocalDateTime.now().toString());
 		user.setAccountUpdated(LocalDateTime.now().toString());
 		userRepository.save(user);
-
+		logger.info("user creation done with id " + user.getId());
 		resMap.clear();
 		resMap.put("id", user.getId());
 		resMap.put("first_name", user.getFirstName());
@@ -80,12 +88,14 @@ public class UserService {
 		if (Utils.isValidString(userId) == false) {
 			resMap.clear();
 			resMap.put("msg", "Please enter input id");
+			logger.error("user fetch failed as userID is not valid " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		if (Utils.isOnlyNumber(userId.trim()) == false) {
 			resMap.clear();
 			resMap.put("msg", "Please enter valid id integer");
+			logger.error("user fetch failed as userID is not valid integer " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 		int givenUserId = Integer.parseInt(userId);
@@ -94,12 +104,14 @@ public class UserService {
 		if (authUser == null) {
 			resMap.clear();
 			resMap.put("msg", "Please enter valid credentials");
+			logger.error("user fetch failed, credentials do not match " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (givenUserId != authUser.getId()) {
 			resMap.clear();
 			resMap.put("msg", "Forbidden to view the data");
+			logger.error("user fetch failed as it's forbidden " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
@@ -111,6 +123,7 @@ public class UserService {
 		resMap.put("username", user.getUsername());
 		resMap.put("account_created", user.getAccountCreated());
 		resMap.put("account_updated", user.getAccountUpdated());
+		logger.info("user data fetched successfully with " + userId);
 		return new ResponseEntity<>(resMap, HttpStatusCode.valueOf(200));
 	}
 
@@ -131,18 +144,21 @@ public class UserService {
 		if (c == 0) {
 			resMap.clear();
 			resMap.put("msg", "No fields to update");
+			logger.warn("No given fields are eligible to update");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		if (Utils.isValidString(userId) == false) {
 			resMap.clear();
 			resMap.put("msg", "Please enter input id");
+			logger.error("Given userId field is not valid string" + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		if (Utils.isOnlyNumber(userId.trim()) == false) {
 			resMap.clear();
 			resMap.put("msg", "Please enter valid id integer");
+			logger.error("Given userId field is not valid integer" + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 		int givenUserId = Integer.parseInt(userId);
@@ -151,12 +167,14 @@ public class UserService {
 		if (authUser == null) {
 			resMap.clear();
 			resMap.put("msg", "Please enter valid credentials");
+			logger.error("user fetch failed, credentials do not match " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (givenUserId != authUser.getId()) {
 			resMap.clear();
 			resMap.put("msg", "Forbidden to view the data");
+			logger.error("user update failed as it's forbidden " + userId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
@@ -180,6 +198,7 @@ public class UserService {
 
 		user.setAccountUpdated(LocalDateTime.now().toString());
 		userRepository.save(user);
+		logger.info("user data updated successfully with " + userId);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 	}
 
