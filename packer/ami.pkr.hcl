@@ -65,7 +65,7 @@ build {
 
   provisioner "file"{
     destination = "/tmp/"
-    source = ["webservice.service","config.json"]
+    sources = ["webservice.service","config.json"]
   }
 
   provisioner "shell" {
