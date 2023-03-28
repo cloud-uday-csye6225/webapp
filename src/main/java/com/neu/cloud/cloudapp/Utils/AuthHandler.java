@@ -5,9 +5,12 @@ import java.util.Base64;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.neu.cloud.cloudapp.controller.ImageController;
 import com.neu.cloud.cloudapp.model.User;
 import com.neu.cloud.cloudapp.repository.UserRepository;
 
@@ -15,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class AuthHandler {
+
+	Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -46,6 +51,7 @@ public class AuthHandler {
 			}
 			return null;
 		} catch (Exception e) {
+			logger.error("Authenticatoin failed with token access");
 			return null;
 		}
 	}

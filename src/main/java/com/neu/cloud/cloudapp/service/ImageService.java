@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
@@ -25,6 +27,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.neu.cloud.cloudapp.Utils.AuthHandler;
 import com.neu.cloud.cloudapp.Utils.Utils;
+import com.neu.cloud.cloudapp.controller.ImageController;
 import com.neu.cloud.cloudapp.model.Image;
 import com.neu.cloud.cloudapp.model.Product;
 import com.neu.cloud.cloudapp.model.User;
@@ -35,6 +38,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class ImageService {
+
+	Logger logger = LoggerFactory.getLogger(ImageService.class);
 
 	@Autowired
 	private ImageRepository imageRepository;
@@ -57,26 +62,31 @@ public class ImageService {
 
 			User authUser = authHandler.getUser(httpServletRequest);
 			if (authUser == null) {
+				logger.error("Unauthorized attempt to access image");
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 			}
 
 			if (Utils.isValidNumber(productId) == false) {
+				logger.error("Product Id should be a valid integer given is " + productId);
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
 
 			Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 			if (!produOptional.isPresent()) {
+				logger.error("Product does not exist with id as " + productId);
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 			}
 
 			if (produOptional.get().getUser().getId() != authUser.getId()) {
+				logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 			}
 
 			Product product = produOptional.get();
 			String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 			if (!isSupportedExtension(extension)) {
+				logger.error("Only images with  jpg, png, jpeg is supported");
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
 
@@ -97,49 +107,61 @@ public class ImageService {
 			try {
 				s3.putObject(bucket, filepath, fis, objectMetadata);
 			} catch (AmazonServiceException e) {
+				logger.error("s3 put object request failed for image for product " + productId);
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
 
 			String imageUrl = String.valueOf(s3.getUrl(bucket, filepath));
+			logger.info("s3 object url " + imageUrl);
 			System.out.println(imageUrl);
 			Image image = new Image(product.getId(), filename, LocalDateTime.now().toString(), imageUrl);
 			imageRepository.save(image);
+			logger.info("image created with id " + image.getId() + " for product " + product.getId());
 			return new ResponseEntity<>(convertToImageDto(new ArrayList<>(Arrays.asList(image))),
 					HttpStatusCode.valueOf(201));
 		} catch (Exception e) {
+			logger.error("error while creating image data" + e.getMessage());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 	}
 
 	private boolean isSupportedExtension(String extension) {
-		return extension != null && (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"));
+		return extension != null && (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg")
+				|| extension.equalsIgnoreCase("jpeg"));
 	}
 
 	public ResponseEntity<?> getAllImage(String productId, HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access images");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("Product Id should be a valid integer given is " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("Product does not exist with id as " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
 		List<Image> images = imageRepository.findAllByProductId(Integer.parseInt(productId));
 
+		logger.info("images fetched for product " + productId);
 		if (images != null && !images.isEmpty()) {
+			logger.info("images fetched for product " + productId + " of size " + images.size());
 			return new ResponseEntity<>(convertToImageDto(images), HttpStatusCode.valueOf(200));
 		}
+		logger.info("No images fetched for product " + productId);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(200));
 
 	}
@@ -161,68 +183,83 @@ public class ImageService {
 	public ResponseEntity<?> getImage(String imageId, String productId, HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access image");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("Product Id should be a valid integer given is " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("Product does not exist with id as " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 		if (Utils.isValidNumber(imageId) == false) {
+			logger.error("imageId should be a valid integer given is " + imageId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Image> imageOptional = imageRepository.findById(Integer.parseInt(imageId));
 
 		if (!imageOptional.isPresent()) {
+			logger.error("image does not exist with id as " + imageId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (imageOptional.get().getProductId() != produOptional.get().getId()) {
+			logger.error("Forbidden attempt to access image " + imageId + "of productId  " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
+		logger.error("image fetched successfully with id " + imageId);
 		return new ResponseEntity<>(new ArrayList<>(Arrays.asList(imageOptional.get())), HttpStatusCode.valueOf(200));
 	}
 
 	public ResponseEntity<?> deleteImage(String imageId, String productId, HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access image");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("Product Id should be a valid integer given is " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("Product does not exist with id as " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 		if (Utils.isValidNumber(imageId) == false) {
+			logger.error("imageId should be a valid integer given is " + imageId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Image> imageOptional = imageRepository.findById(Integer.parseInt(imageId));
 
 		if (!imageOptional.isPresent()) {
+			logger.error("image does not exist with id as " + imageId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (imageOptional.get().getProductId() != produOptional.get().getId()) {
+			logger.error("Forbidden attempt to access image " + imageId + "of productId  " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 		Image image = imageOptional.get();
@@ -233,6 +270,7 @@ public class ImageService {
 		String filepath = urlSplit[3] + "/" + urlSplit[4];
 		s3.deleteObject(bucket, filepath);
 		imageRepository.delete(image);
+		logger.error("image deleted successfully with id " + imageId);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 	}
 }

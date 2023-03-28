@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatusCode;
@@ -25,6 +27,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class ProductService {
 
+	Logger logger = LoggerFactory.getLogger(ProductService.class);
+
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -41,12 +45,14 @@ public class ProductService {
 			HttpServletRequest httpServletRequest) throws DataIntegrityViolationException {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access product");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (requMap.containsKey("name") == false || requMap.containsKey("description") == false
 				|| requMap.containsKey("sku") == false || requMap.containsKey("manufacturer") == false
 				|| requMap.containsKey("quantity") == false) {
+			logger.error("product creation does not have all required fields");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -57,12 +63,14 @@ public class ProductService {
 		int quantity = (int) requMap.getOrDefault("quantity", null);
 		if (Utils.isValidString(name) == false || Utils.isValidString(description) == false
 				|| Utils.isValidString(sku) == false || Utils.isValidString(manufacturer) == false) {
+			logger.error("product creation does not have all valid values");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		int qty = quantity;
 
 		if (qty < 0 || qty > 100) {
+			logger.error("product quantity should be btw 0 and 100");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -77,6 +85,7 @@ public class ProductService {
 		product.setUser(authUser);
 
 		productRepository.save(product);
+		logger.info("product created successfully with id " + product.getId());
 		return new ResponseEntity<>(convertToProductDto(product), HttpStatusCode.valueOf(201));
 	}
 
@@ -97,14 +106,17 @@ public class ProductService {
 			HttpServletRequest httpServletRequest) {
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("product id should be valid integer given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("product does not exist with given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
+		logger.error("product fetched successfully with given: " + productId);
 		return new ResponseEntity<>(convertToProductDto(produOptional.get()), HttpStatusCode.valueOf(200));
 	}
 
@@ -112,31 +124,37 @@ public class ProductService {
 			HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access product");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("product id should be valid integer given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("product does not exist with given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
-		productRepository.delete(produOptional.get());
 		try {
 			List<Image> images = imageRepository.findAllByProductId(Integer.parseInt(productId));
 			for (Image img : images) {
 				imageService.deleteImage(String.valueOf(img.getId()), productId, httpServletRequest);
 			}
 		} catch (Exception e) {
+			logger.error("error while deleting product " + productId);
 		}
+		productRepository.delete(produOptional.get());
+		logger.info("product deleted successfully " + productId);
 		return new ResponseEntity<>(convertToProductDto(produOptional.get()), HttpStatusCode.valueOf(204));
 	}
 
@@ -144,20 +162,24 @@ public class ProductService {
 			Map<String, Object> requMap, HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access product");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("product id should be valid integer given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("product does not exist with given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
@@ -194,9 +216,11 @@ public class ProductService {
 				product.setQuantity(qty);
 				product.setDateLastUpdated(LocalDateTime.now().toString());
 			} else {
+				logger.error("product quantity should be btw 0 and 100");
 				return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 			}
 		}
+		logger.info("product patch updated successfully " + productId);
 		productRepository.save(product);
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 	}
@@ -205,20 +229,24 @@ public class ProductService {
 			HttpServletRequest httpServletRequest) {
 		User authUser = authHandler.getUser(httpServletRequest);
 		if (authUser == null) {
+			logger.error("Unauthorized attempt to access product");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(401));
 		}
 
 		if (Utils.isValidNumber(productId) == false) {
+			logger.error("product id should be valid integer given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		Optional<Product> produOptional = productRepository.findById(Integer.parseInt(productId));
 
 		if (!produOptional.isPresent()) {
+			logger.error("product does not exist with given: " + productId);
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
 		}
 
 		if (produOptional.get().getUser().getId() != authUser.getId()) {
+			logger.error("Forbidden attempt to access product" + productId + "by user " + authUser.getId());
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
 		}
 
@@ -227,6 +255,7 @@ public class ProductService {
 		if (requMap.containsKey("name") == false || requMap.containsKey("description") == false
 				|| requMap.containsKey("sku") == false || requMap.containsKey("manufacturer") == false
 				|| requMap.containsKey("quantity") == false) {
+			logger.error("product creation does not have all required fields");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -238,10 +267,12 @@ public class ProductService {
 
 		if (Utils.isValidString(name) == false || Utils.isValidString(description) == false
 				|| Utils.isValidString(sku) == false || Utils.isValidString(manufacturer) == false) {
+			logger.error("product creation does not have all valid values");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
 		if (qty < 0 || qty > 100) {
+			logger.error("product quantity should be btw 0 and 100");
 			return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
 		}
 
@@ -271,6 +302,7 @@ public class ProductService {
 		}
 
 		productRepository.save(product);
+		logger.info("product patch updated successfully " + productId + " for user " + authUser.getId());
 		return new ResponseEntity<>(null, HttpStatusCode.valueOf(204));
 
 	}
