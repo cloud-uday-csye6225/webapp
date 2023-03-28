@@ -21,7 +21,7 @@ sudo systemctl enable tomcat
 # mysql -uroot -p$passwords --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root@1234ABCDEF';"
 # mysql -u root -proot@1234ABCDEF -e "create database cbdh;"
 sudo chmod 770 /home/ec2-user/cloud-app-0.0.1-SNAPSHOT.jar
-sudo yum install amazon-cloudwatch-agent
+sudo yum install amazon-cloudwatch-agent -y
 sudo cp /tmp/webservice.service /etc/systemd/system
 sudo chmod 770 /etc/systemd/system/webservice.service
 sudo systemctl start webservice.service
