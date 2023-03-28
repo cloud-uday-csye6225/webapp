@@ -63,9 +63,9 @@ build {
     source      = "./../target/cloud-app-0.0.1-SNAPSHOT.jar"
   }
 
-  provisioner "file"{
+  provisioner "file" {
     destination = "/tmp/"
-    sources = ["webservice.service","config.json"]
+    sources     = ["webservice.service", "config.json"]
   }
 
   provisioner "shell" {
