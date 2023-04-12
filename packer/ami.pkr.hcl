@@ -15,7 +15,7 @@ variable "aws_secret_key" {
 
 variable "demo_account_id" {
   type    = list(string)
-  default = ["986054102018", "162585530017"]
+  default = [env("AWS_DEMO_ACCOUNT_ID"),env("AWS_DEV_ACCOUNT_ID")]
 }
 
 variable "source_ami" {
