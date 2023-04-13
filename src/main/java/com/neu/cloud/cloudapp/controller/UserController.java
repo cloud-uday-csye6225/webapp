@@ -82,7 +82,7 @@ public class UserController {
 	}
 
 	@GetMapping("/healthz")
-	public ResponseEntity<Object> checkHealth() {
+	public ResponseEntity<Object> checkHealthz() {
 		statsDClient.incrementCounter(getHealthString);
 		logger.info("ping for app health check");
 		return new ResponseEntity<>(HttpStatusCode.valueOf(200));
