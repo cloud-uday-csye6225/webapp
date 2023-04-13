@@ -47,18 +47,36 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
           AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
-      - name: Authenticate AWS CLI
-        run: aws configure set aws_access_key_id ${{ secrets.AWS_DEMO_ACCESS_KEY }} && aws configure set aws_secret_access_key ${{ secrets.AWS_DEMO_SECRET_KEY }} && aws configure set default.region ${{ secrets.AWS_SOURCE_AMI }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Create New Launch Template Version 
         run: |
-          ami-id=$(aws ec2 describe-images --filters "Name=owner-id,Values=${{ secrets.AWS_DEV_ACCOUNT_ID }}" --query "sort_by(Images, &CreationDate)[-1].[ImageId]" --output "text")
-          echo "amiid:"
-          echo $ami-id
-          aws ec2 create-launch-template-version --launch-template-id $TEMPLATE_ID --launch-template-data "ImageId=$ami-id" --source-version 1  | grep LaunchTemplateVersionId | awk '{print $2}' | tr -d '",'
+          latestAmi=$(aws ec2 describe-images --filters "Name=owner-id,Values=${{ secrets.AWS_DEV_ACCOUNT_ID }}" --query "sort_by(Images, &CreationDate)[-1].[ImageId]" --output "text")
+          echo "latest ami:"
+          echo $latestAmi
+          aws ec2 create-launch-template-version --launch-template-id $TEMPLATE_ID --launch-template-data "ImageId=$latestAmi" --source-version 1  | grep LaunchTemplateVersionId | awk '{print $2}' | tr -d '",'
         env:
+          AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
+          AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
+          AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
+          AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
           TEMPLATE_ID: ${{ secrets.AWS_TEMPLATE_ID }}
       - name: Instance Refresh
         run: |
           aws autoscaling start-instance-refresh --auto-scaling-group-name autoscaling_group --preferences '{"InstanceWarmup": 300, "MinHealthyPercentage": 50}'
+        env:
+          AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
+          AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
+          AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
+          AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
+          TEMPLATE_ID: ${{ secrets.AWS_TEMPLATE_ID }}
