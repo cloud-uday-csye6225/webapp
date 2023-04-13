@@ -63,8 +63,6 @@ jobs:
           AWS_DEV_ACCESS_KEY: ${{ secrets.AWS_DEV_ACCESS_KEY }}
           AWS_DEV_SECRET_KEY: ${{ secrets.AWS_DEV_SECRET_KEY }}
           AWS_DEV_SUBNET_ID: ${{ secrets.AWS_DEV_SUBNET_ID }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
           AWS_DEMO_ACCOUNT_ID: ${{ secrets.AWS_DEMO_ACCOUNT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_AMI: ${{ secrets.AWS_SOURCE_AMI }}
