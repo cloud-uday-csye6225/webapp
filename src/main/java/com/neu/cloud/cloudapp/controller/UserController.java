@@ -36,7 +36,7 @@ public class UserController {
 	private String putUserString = "put.user.count";
 	private String getHealthString = "get.health.count";
 
-	@PostMapping("/v1/user")
+	@PostMapping("/v2/user")
 	public ResponseEntity<Map<String, Object>> createUser(@RequestBody(required = false) Map<String, String> requMap) {
 		try {
 			statsDClient.incrementCounter(postCreateUserString);
@@ -50,7 +50,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/v1/user/{userId}")
+	@GetMapping("/v2/user/{userId}")
 	public ResponseEntity<Map<String, Object>> getUserById(@PathVariable String userId,
 			HttpServletRequest httpServletRequest) {
 		try {
@@ -66,7 +66,7 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/v1/user/{userId}")
+	@PutMapping("/v2/user/{userId}")
 	public ResponseEntity<Map<String, Object>> updateUserById(@PathVariable String userId,
 			@RequestBody Map<String, String> requMap, HttpServletRequest httpServletRequest) {
 		try {
