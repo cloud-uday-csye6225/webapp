@@ -1,6 +1,7 @@
 # Cloud Web Applicationrfetgyuik
 This Project is built using Spring boot, Java, MySQL.
 
+
 ## Requirements
 For building and running the application you need:
  - JDK 19
